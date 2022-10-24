@@ -1,9 +1,43 @@
+from fileinput import close
+from re import S
 import streamlit as st
 import numpy as np
 import pandas as pd
 import requests
+import json
+from PIL import Image
 
+st.set_page_config(page_title="Weather Canaliser", layout="wide")
 st.title("The Weather Canaliser 😎")
+##image title
+image = Image.open('title.png')
+
+st.image(image, caption="amazing isn't it?",output_format='PNG')
+
+#not required, I just liked the song --Ethan
+# Cosmic Dance by Joseph Patrick Moore
+st.caption("sit back, relax, don't worry about it")
+audio_file = open('CosmicDance.mp3', 'rb')
+audio_bytes = audio_file.read()
+st.audio(audio_bytes, format='audio/ogg')
+#------------------------------------------------------
+
+#------------------------------------------------------
+#text input requirement --ethan
+def handleLocation(zipcode):
+    if(zipcode):
+        api_key = "cd101785cf9a9ea832093a5827bdc77c"
+        url = "https://api.openweathermap.org/data/2.5/weather?zip=" + zipcode + ",us&appid=" + api_key
+        header = {'content-type': 'application/json',
+        'x-access-token': api_key}
+        response = requests.get(url).json()
+        st.write(response)
+        st.success("Successful 🍨") #and success output
+
+st.write("What's your zip code? Let's check the weather")
+zip = st.text_input("Zip Code")
+handleLocation(zip)
+
 
 #1 1 interactive table //Ethan -------
 with st.container():
@@ -31,3 +65,7 @@ with st.container():
     columns=['lat', 'lon'])
 
     st.map(df)
+
+# Add a selectbox to the sidebar:
+
+
