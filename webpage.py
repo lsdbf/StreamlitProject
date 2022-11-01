@@ -24,19 +24,26 @@ st.audio(audio_bytes, format='audio/ogg')
 
 #------------------------------------------------------
 #text input requirement --ethan
-def handleLocation(zipcode):
-    if(zipcode):
+#modified output - displaying icon for better user visualization --mariela
+def handleLocation(city):
+    if(city):
         api_key = "cd101785cf9a9ea832093a5827bdc77c"
-        url = "https://api.openweathermap.org/data/2.5/weather?zip=" + zipcode + ",us&appid=" + api_key
+        url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + ",us&appid=" + api_key
         header = {'content-type': 'application/json',
         'x-access-token': api_key}
         response = requests.get(url).json()
-        st.write(response)
-        st.success("Successful 🍨") #and success output
+        #st.json(response)
+        #st.success("Successful 🍨") #and success output
+        general = response['weather'][0]['main']
+        icon_id = response['weather'][0]['icon']
+        icon = f'http://openweathermap.org/img/wn/{icon_id}@2x.png'
+        st.write(general)
+        st.image(icon)
 
-st.write("What's your zip code? Let's check the weather")
-zip = st.text_input("Zip Code")
-handleLocation(zip)
+
+st.write("What's your city? Let's check the weather")
+city = st.text_input("City")
+handleLocation(city)
 
 
 #1 1 interactive table //Ethan -------
@@ -67,5 +74,7 @@ with st.container():
     st.map(df)
 
 # Add a selectbox to the sidebar:
+
+
 
 
