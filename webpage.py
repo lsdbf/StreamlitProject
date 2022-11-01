@@ -35,9 +35,6 @@ def handleLocation(zipcode):
         st.write(response)
         st.success("Successful 🍨") #and success output
 
-st.write("What's your zip code? Let's check the weather")
-zip = st.text_input("Zip Code")
-handleLocation(zip)
 #Added a sidebar - Chris
 add_selectbox = st.sidebar.selectbox(
     "Choose an option",
