@@ -37,12 +37,12 @@ def handleLocation(zipcode):
 
 def storeData(city_name):
     api_key = "cd101785cf9a9ea832093a5827bdc77c"
-    url = "https://api.openweathermap.org/data/2.5/weather?q=" + city_name + "&appid=" + api_key
+    url = "https://api.openweathermap.org/data/2.5/weather?q=" + city_name + "&appid=" + api_key + "&units=imperial"
     response = requests.get(url)
     if response:
         json = response.json()
-        temperature = json['main']['temp'] - 273.15
-        temp_feels = json['main']['feels_like'] - 273.15
+        temperature = json['main']['temp']
+        temp_feels = json['main']['feels_like']
         humidity = json ['main']['humidity']
         city = json['name']
         long = json['coord']['lon']
@@ -132,6 +132,7 @@ else:
                 st.dataframe(values, use_container_width = st.session_state.use_container_width)
         except TypeError:
             st.error('Please type correct city name', icon="🚨")
+
 
 
 
