@@ -8,11 +8,8 @@ import json
 from PIL import Image
 
 st.set_page_config(page_title="Weather Canaliser", layout="wide")
-st.title("The Weather Canaliser 😎")
-##image title
-image = Image.open('title.png')
 
-# Added UI widget function to show weather. Can delete just an idea - Chris
+#Added UI widget function to show weather. Can delete just an idea - Chris
 def showTemperatureUI(name, temperature, wind, humidty):
     with st.container():
         col1, col2, col3, col4 = st.columns(4)
@@ -21,17 +18,6 @@ def showTemperatureUI(name, temperature, wind, humidty):
         col3.metric("Wind", wind)
         col4.metric("Humidity", humidty)
 
-st.image(image, caption="amazing isn't it?",output_format='PNG')
-
-#not required, I just liked the song --Ethan
-# Cosmic Dance by Joseph Patrick Moore
-st.caption("sit back, relax, don't worry about it")
-audio_file = open('CosmicDance.mp3', 'rb')
-audio_bytes = audio_file.read()
-st.audio(audio_bytes, format='audio/ogg')
-#------------------------------------------------------
-
-#------------------------------------------------------
 #text input requirement --ethan
 def handleLocation(zipcode):
     if(zipcode):
@@ -52,35 +38,61 @@ def handleLocation(zipcode):
 st.write("What's your zip code? Let's check the weather")
 zip = st.text_input("Zip Code")
 handleLocation(zip)
+#Added a sidebar - Chris
+add_selectbox = st.sidebar.selectbox(
+    "Choose an option",
+    ["Homepage", "5-Day Forecast", "Compare Cities"]
+)
 
+#Line graph to show weather for 5 day period - Chris
+if add_selectbox == "5-Day Forecast":
+    st.write("To be constructed")
+#Bar chart to let user compare weather for multiple cities - Chris
+elif add_selectbox == "Compare Cities":
+    st.write("To be constructed")
 
-#1 1 interactive table //Ethan -------
-with st.container():
-    st.write("testing interactive table")
-    df = pd.DataFrame(
-    np.random.randn(10, 20),
-    columns=('column %d' % i for i in range(20)))
+else:
+    st.title("The Weather Canaliser 😎")
+    ##image title
+    image = Image.open('title.png')
+    st.image(image, caption="amazing isn't it?", output_format='PNG')
+    #not required, I just liked the song --Ethan
+    # Cosmic Dance by Joseph Patrick Moore
+    st.caption("sit back, relax, don't worry about it")
+    audio_file = open('media/CosmicDance.mp3', 'rb')
+    audio_bytes = audio_file.read()
+    st.audio(audio_bytes, format='audio/ogg')
+    st.write("What's your zip code? Let's check the weather")
+    zip = st.text_input("Zip Code")
+    handleLocation(zip)
 
-    st.dataframe(df) # same as st.write(df)    
+    #1 1 interactive table //Ethan -------
+    with st.container():
+        st.write("testing interactive table")
+        df = pd.DataFrame(
+        np.random.randn(10, 20),
+        columns=('column %d' % i for i in range(20)))
 
-#2 2 chart Elements //Ethan -------
+        st.dataframe(df) # same as st.write(df)
 
-with st.container():
-    st.write("test line graph")
-    st.line_chart(df)
+    #2 2 chart Elements //Ethan -------
 
-with st.container():
-    st.write("test area graph")
-    st.area_chart(df)
+    with st.container():
+        st.write("test line graph")
+        st.line_chart(df)
 
-#3 1 Map //Ethan ------
-with st.container():
-    df = pd.DataFrame(
-    np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
-    columns=['lat', 'lon'])
+    with st.container():
+        st.write("test area graph")
+        st.area_chart(df)
 
-    st.map(df)
+    #3 1 Map //Ethan ------
+    with st.container():
+        df = pd.DataFrame(
+        np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
+        columns=['lat', 'lon'])
 
-# Add a selectbox to the sidebar:
+        st.map(df)
+
+    # Add a selectbox to the sidebar:
 
 
