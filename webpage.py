@@ -1,5 +1,7 @@
 from fileinput import close
 from re import S
+
+import dateutil.utils
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -18,6 +20,56 @@ def showTemperatureUI(name, temperature, temp_feels, wind, humidty):
         col3.metric("Feels like", temp_feels)
         col4.metric("Wind", wind)
         col5.metric("Humidity", humidty)
+
+#API call that gets 5 day forecast and creats chart
+def getFiveDayForecast(zipcode, option):
+    if (zipcode):
+        api_key = "cd101785cf9a9ea832093a5827bdc77c"
+        url = "https://api.openweathermap.org/data/2.5/forecast?zip=" + zipcode + ",us&appid=" + api_key + "&units=imperial"
+        header = {'content-type': 'application/json',
+                  'x-access-token': api_key}
+        response = requests.get(url).json()
+        array_to_pass = []
+        label = None
+
+        days_list = []
+        for dt in response["list"]:
+            days_list.append(dt["dt_txt"])
+
+        if option == "Temp":
+            temp_per_day = []
+            for dt in response["list"]:
+                temp_per_day.append(dt["main"]["temp"])
+                array_to_pass = temp_per_day
+                label = "Temperature in Fahrenheit"
+        elif option == "Humidity":
+            humidity_per_day = []
+            for dt in response["list"]:
+                humidity_per_day.append(dt["main"]["humidity"])
+                array_to_pass = humidity_per_day
+                label = "Humidity Percentage"
+
+        elif option == "Wind":
+            wind_per_day = []
+            for dt in response["list"]:
+                wind_per_day.append(dt["wind"]["speed"])
+                array_to_pass = wind_per_day
+                label = "Wind miles per hour"
+
+        elif option == "Rain":
+            rain_per_day = []
+            for dt in response["list"]:
+                rain_per_day.append(dt["pop"] * 100)
+                array_to_pass = rain_per_day
+                label = "Probability of precipitation"
+
+        st.write("5-Day Forecast")
+        data = pd.DataFrame({
+            'index': days_list,
+            label: array_to_pass,
+        }).set_index('index')
+
+        st.line_chart(data)
 
 #text input requirement --ethan
 def handleLocation(zipcode):
@@ -62,7 +114,14 @@ add_selectbox = st.sidebar.selectbox(
 
 #Line graph to show weather for 5 day period - Chris
 if add_selectbox == "5-Day Forecast":
-    st.write("To be constructed")
+    with st.container():
+        st.write("Pick your city to check the participation for the next 5 days.")
+        zip = st.text_input("Zip Code")
+        option = st.selectbox(
+            'What would you like to see the 5-day forecast for?',
+            ('Temp', 'Humidity', 'Wind', 'Rain'))
+        getFiveDayForecast(zip, option)
+
 
 #Bar chart to let user compare weather for multiple cities - Chris
 elif add_selectbox == "Compare Cities":
@@ -95,12 +154,6 @@ else:
     audio_file = open('media/CosmicDance.mp3', 'rb')
     audio_bytes = audio_file.read()
     st.audio(audio_bytes, format='audio/ogg')
-    st.write("What's your zip code? Let's check the weather")
-    zip = st.text_input("Zip Code")
-    handleLocation(zip)
-##st.write("What's your zip code? Let's check the weather")
-##zip = st.text_input("Zip Code")
-##handleLocation(zip)
 
     col1, col2 = st.columns(2)
 
