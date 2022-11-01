@@ -1,11 +1,17 @@
+from cProfile import label
 from fileinput import close
 from re import S
+from urllib import response
 import streamlit as st
 import numpy as np
 import pandas as pd
 import requests
 import json
 from PIL import Image
+from datetime import datetime , timedelta
+
+api_key = "cd101785cf9a9ea832093a5827bdc77c"
+base_url= 'https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}'
 
 st.set_page_config(page_title="Weather Canaliser", layout="wide")
 st.title("The Weather Canaliser 😎")
@@ -37,11 +43,20 @@ def handleLocation(city):
         general = response['weather'][0]['main']
         icon_id = response['weather'][0]['icon']
         icon = f'http://openweathermap.org/img/wn/{icon_id}@2x.png'
-        st.write(general)
+        temperature = round(convert_to_F(response['main']['temp']))
+        temp_feels = round(convert_to_F(response['main']['feels_like'])) 
+        #added feels_like and modified output style for better display --mariela
+        st.success('Temperature: '+ str(temperature))
+        st.info('Feels Like: ' + str(temp_feels))
+        st.subheader('Status: ' + general)
         st.image(icon)
+        st.caption('Data provided by Open Weather Map')
 
+#display Farenheit degrees --mariela
+def convert_to_F(temp_in_K):
+    return 1.8*(temp_in_K - 273) + 32
 
-st.write("What's your city? Let's check the weather")
+st.header("Let's check the weather! Please enter the city below:")
 city = st.text_input("City")
 handleLocation(city)
 
@@ -73,8 +88,21 @@ with st.container():
 
     st.map(df)
 
+#removing the streamlit hamburger menu --mariela
+st.markdown(""" <style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style> """, unsafe_allow_html=True)
+
+#removing padding from app --mariela
+padding = 0
+st.markdown(f""" <style>
+    .reportview-container .main .block-container{{
+        padding-top: {padding}rem;
+        padding-right: {padding}rem;
+        padding-left: {padding}rem;
+        padding-bottom: {padding}rem;
+    }} </style> """, unsafe_allow_html=True)
+
+
 # Add a selectbox to the sidebar:
-
-
-
-
