@@ -51,8 +51,6 @@ def storeData(city_name):
         result = [temperature,temp_feels,humidity,city,long,lat]
 
         return result, json
-    #else:
-    #    st.error("woah there buddy 🚨, invalid result")
 
 #Added a sidebar - Chris
 add_selectbox = st.sidebar.selectbox(
@@ -105,55 +103,40 @@ else:
     col1, col2 = st.columns(2)
 
     with st.container():
-        st.title("Enter Your City")
-        cityname = st.text_input("city")
-        res, json = storeData(cityname)
-        df = pd.DataFrame(
-        {
-            "lat" : [res[5]],
-            "lon" : [res[4]],
-        },
-        columns = ["lat","lon"]
-        )
-        st.map(df)
-        st.success("Map successfully displayed")
-        values = pd.DataFrame(
+        try:
+            st.title("Enter Your City")
+            cityname = st.text_input("city")
+
+            if cityname:
+                res, json = storeData(cityname)
+
+                df = pd.DataFrame(
                 {
-                    "temp" : [res[0]],
-                    "temp_feels" : [res[1]],
-                    "humidity" : [res[2]],
-                    "name" : [res[3]]
+                    "lat" : [res[5]],
+                    "lon" : [res[4]],
                 },
-                columns= ["temp","temp_feels","humidity","name"]
-            )
-        st.checkbox("wide length table", value=False, key="use_container_width") #check box requirement
-        st.dataframe(values, use_container_width = st.session_state.use_container_width)
+                columns = ["lat","lon"]
+                )
+                st.map(df)
+                st.success("Map successfully displayed")
+                values = pd.DataFrame(
+                        {
+                            "temp" : [res[0]],
+                            "temp_feels" : [res[1]],
+                            "humidity" : [res[2]],
+                            "name" : [res[3]]
+                        },
+                        columns= ["temp","temp_feels","humidity","name"]
+                    )
+                st.checkbox("wide length table", value=False, key="use_container_width") #check box requirement
+                st.dataframe(values, use_container_width = st.session_state.use_container_width)
+        except TypeError:
+            st.error('Please type correct city name', icon="🚨")
 
-    #1 interactive table //Ethan -------
-    with st.container():
-        st.write("testing interactive table")
-        df = pd.DataFrame(
-        np.random.randn(10, 20),
-        columns=('column %d' % i for i in range(20)))
-        st.dataframe(df)
-        #1 1 interactive table //Ethan -------
-        with st.container():
-            st.write("testing interactive table")
-            df = pd.DataFrame(
-            np.random.randn(10, 20),
-            columns=('column %d' % i for i in range(20)))
 
-            st.dataframe(df) # same as st.write(df)
 
-        #3 1 Map //Ethan ------
-        with st.container():
-            df = pd.DataFrame(
-            np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
-            columns=['lat', 'lon'])
 
-            st.map(df)
-    #3 1 Map //Ethan ------
 
-    # Add a selectbox to the sidebar:
+
 
 
