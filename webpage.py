@@ -10,13 +10,14 @@ from PIL import Image
 st.set_page_config(page_title="Weather Canaliser", layout="wide")
 
 #Added UI widget function to show weather. Can delete just an idea - Chris
-def showTemperatureUI(name, temperature, wind, humidty):
+def showTemperatureUI(name, temperature, temp_feels, wind, humidty):
     with st.container():
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4, col5 = st.columns(5)
         col1.metric("Location", name)
         col2.metric("Temperature", temperature)
-        col3.metric("Wind", wind)
-        col4.metric("Humidity", humidty)
+        col3.metric("Feels like", temp_feels)
+        col4.metric("Wind", wind)
+        col5.metric("Humidity", humidty)
 
 #text input requirement --ethan
 def handleLocation(zipcode):
@@ -30,9 +31,7 @@ def handleLocation(zipcode):
         temperature = response["main"]["temp"]
         wind = response["wind"]["speed"]
         humidty = response["main"]["humidity"]
-        with st.container():
-            showTemperatureUI(name, temperature, wind, humidty)
-        st.write(response)
+
         st.success("Successful 🍨") #and success output
 
 def storeData(city_name):
@@ -44,9 +43,12 @@ def storeData(city_name):
         temperature = json['main']['temp']
         temp_feels = json['main']['feels_like']
         humidity = json ['main']['humidity']
+        wind = json ['wind']['speed']
         city = json['name']
         long = json['coord']['lon']
         lat = json['coord']['lat']
+        with st.container():
+            showTemperatureUI(city, temperature, temp_feels, wind, humidity)
 
         result = [temperature,temp_feels,humidity,city,long,lat]
 
