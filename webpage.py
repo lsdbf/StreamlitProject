@@ -12,6 +12,15 @@ st.title("The Weather Canaliser 😎")
 ##image title
 image = Image.open('title.png')
 
+# Added UI widget function to show weather. Can delete just an idea - Chris
+def showTemperatureUI(name, temperature, wind, humidty):
+    with st.container():
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric("Location", name)
+        col2.metric("Temperature", temperature)
+        col3.metric("Wind", wind)
+        col4.metric("Humidity", humidty)
+
 st.image(image, caption="amazing isn't it?",output_format='PNG')
 
 #not required, I just liked the song --Ethan
@@ -27,10 +36,16 @@ st.audio(audio_bytes, format='audio/ogg')
 def handleLocation(zipcode):
     if(zipcode):
         api_key = "cd101785cf9a9ea832093a5827bdc77c"
-        url = "https://api.openweathermap.org/data/2.5/weather?zip=" + zipcode + ",us&appid=" + api_key
+        url = "https://api.openweathermap.org/data/2.5/weather?zip=" + zipcode + ",us&appid=" + api_key + "&units=imperial"
         header = {'content-type': 'application/json',
         'x-access-token': api_key}
         response = requests.get(url).json()
+        name = response["name"]
+        temperature = response["main"]["temp"]
+        wind = response["wind"]["speed"]
+        humidty = response["main"]["humidity"]
+        with st.container():
+            showTemperatureUI(name, temperature, wind, humidty)
         st.write(response)
         st.success("Successful 🍨") #and success output
 
