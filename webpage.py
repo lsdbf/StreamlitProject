@@ -34,6 +34,7 @@ def handleLocation(zipcode):
             showTemperatureUI(name, temperature, wind, humidty)
         st.write(response)
         st.success("Successful 🍨") #and success output
+
 def storeData(city_name):
     api_key = "cd101785cf9a9ea832093a5827bdc77c"
     url = "https://api.openweathermap.org/data/2.5/weather?q=" + city_name + "&appid=" + api_key
