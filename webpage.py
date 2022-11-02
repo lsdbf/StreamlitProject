@@ -10,9 +10,6 @@ import json
 import altair as alt
 from PIL import Image
 
-st.set_page_config(page_title="Weather Canaliser", layout="wide")
-
-
 # Added UI widget function to show weather. Can delete just an idea - Chris
 def showTemperatureUI(name, temperature, temp_feels, wind, humidty):
     with st.container():
@@ -119,7 +116,7 @@ add_selectbox = st.sidebar.selectbox(
 # Line graph to show weather for 5 day period - Chris
 if add_selectbox == "5-Day Forecast":
     with st.container():
-        st.write("Pick your city to check the participation for the next 5 days.")
+        st.write("Pick your city to check the weather for the next 5 days.")
         zip = st.text_input("Zip Code")
         option = st.selectbox(
             'What would you like to see the 5-day forecast for?',
