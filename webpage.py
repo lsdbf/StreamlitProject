@@ -7,11 +7,13 @@ import numpy as np
 import pandas as pd
 import requests
 import json
+import altair as alt
 from PIL import Image
 
 st.set_page_config(page_title="Weather Canaliser", layout="wide")
 
-#Added UI widget function to show weather. Can delete just an idea - Chris
+
+# Added UI widget function to show weather. Can delete just an idea - Chris
 def showTemperatureUI(name, temperature, temp_feels, wind, humidty):
     with st.container():
         col1, col2, col3, col4, col5 = st.columns(5)
@@ -21,7 +23,8 @@ def showTemperatureUI(name, temperature, temp_feels, wind, humidty):
         col4.metric("Wind", wind)
         col5.metric("Humidity", humidty)
 
-#API call that gets 5 day forecast and creats chart
+
+# API call that gets 5 day forecast and creats chart
 def getFiveDayForecast(zipcode, option):
     if (zipcode):
         api_key = "cd101785cf9a9ea832093a5827bdc77c"
@@ -71,20 +74,22 @@ def getFiveDayForecast(zipcode, option):
 
         st.line_chart(data)
 
-#text input requirement --ethan
+
+# text input requirement --ethan
 def handleLocation(zipcode):
-    if(zipcode):
+    if (zipcode):
         api_key = "cd101785cf9a9ea832093a5827bdc77c"
         url = "https://api.openweathermap.org/data/2.5/weather?zip=" + zipcode + ",us&appid=" + api_key + "&units=imperial"
         header = {'content-type': 'application/json',
-        'x-access-token': api_key}
+                  'x-access-token': api_key}
         response = requests.get(url).json()
         name = response["name"]
         temperature = response["main"]["temp"]
         wind = response["wind"]["speed"]
         humidty = response["main"]["humidity"]
 
-        st.success("Successful 🍨") #and success output
+        st.success("Successful 🍨")  # and success output
+
 
 def storeData(city_name):
     api_key = "cd101785cf9a9ea832093a5827bdc77c"
@@ -94,25 +99,26 @@ def storeData(city_name):
         json = response.json()
         temperature = json['main']['temp']
         temp_feels = json['main']['feels_like']
-        humidity = json ['main']['humidity']
-        wind = json ['wind']['speed']
+        humidity = json['main']['humidity']
+        wind = json['wind']['speed']
         city = json['name']
         long = json['coord']['lon']
         lat = json['coord']['lat']
         with st.container():
             showTemperatureUI(city, temperature, temp_feels, wind, humidity)
 
-        result = [temperature,temp_feels,humidity,city,long,lat]
+        result = [temperature, temp_feels, humidity, city, long, lat]
 
         return result, json
 
-#Added a sidebar - Chris
+
+# Added a sidebar - Chris
 add_selectbox = st.sidebar.selectbox(
     "Choose an option",
-    ["Homepage", "5-Day Forecast", "Compare Cities"]
+    ["Homepage", "5-Day Forecast", "Compare Cities Weather"]
 )
 
-#Line graph to show weather for 5 day period - Chris
+# Line graph to show weather for 5 day period - Chris
 if add_selectbox == "5-Day Forecast":
     with st.container():
         st.write("Pick your city to check the participation for the next 5 days.")
@@ -123,9 +129,27 @@ if add_selectbox == "5-Day Forecast":
         getFiveDayForecast(zip, option)
 
 
-#Bar chart to let user compare weather for multiple cities - Chris
-elif add_selectbox == "Compare Cities":
-    st.write("To be constructed")
+# Bar chart to let user compare weather for multiple cities - Chris
+elif add_selectbox == "Compare Cities Weather":
+    options = st.multiselect(
+        'Compare the Temperature in Major Cities',
+        ['New York', 'Miami', 'Chicago', 'Dallas', "Boston", "Los Angeles"],
+    )
+    columns = []
+    temp_array = []
+
+    for x in options:
+        columns.append(x)
+        res, json = storeData(x)
+        temp_array.append(res[0])
+
+
+    data = pd.DataFrame({
+        'index': columns,
+        'sports_teams': temp_array,
+    }).set_index('index')
+
+    st.bar_chart(data)
 
 else:
     col1, col2 = st.columns(2)
@@ -166,33 +190,24 @@ else:
                 res, json = storeData(cityname)
 
                 df = pd.DataFrame(
-                {
-                    "lat" : [res[5]],
-                    "lon" : [res[4]],
-                },
-                columns = ["lat","lon"]
+                    {
+                        "lat": [res[5]],
+                        "lon": [res[4]],
+                    },
+                    columns=["lat", "lon"]
                 )
                 st.map(df)
                 st.success("Map successfully displayed")
                 values = pd.DataFrame(
-                        {
-                            "temp" : [res[0]],
-                            "temp_feels" : [res[1]],
-                            "humidity" : [res[2]],
-                            "name" : [res[3]]
-                        },
-                        columns= ["temp","temp_feels","humidity","name"]
-                    )
-                st.checkbox("wide length table", value=False, key="use_container_width") #check box requirement
-                st.dataframe(values, use_container_width = st.session_state.use_container_width)
+                    {
+                        "temp": [res[0]],
+                        "temp_feels": [res[1]],
+                        "humidity": [res[2]],
+                        "name": [res[3]]
+                    },
+                    columns=["temp", "temp_feels", "humidity", "name"]
+                )
+                st.checkbox("wide length table", value=False, key="use_container_width")  # check box requirement
+                st.dataframe(values, use_container_width=st.session_state.use_container_width)
         except TypeError:
             st.error('Please type correct city name', icon="🚨")
-
-
-
-
-
-
-
-
-
