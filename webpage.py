@@ -24,7 +24,7 @@ def showTemperatureUI(name, temperature, temp_feels, wind, humidty):
         col5.metric("Humidity", humidty)
 
 
-# API call that gets 5 day forecast and creats chart
+# API call that gets 5 day forecast and creates chart
 def getFiveDayForecast(zipcode, option):
     if (zipcode):
         api_key = "cd101785cf9a9ea832093a5827bdc77c"
@@ -104,10 +104,8 @@ def storeData(city_name):
         city = json['name']
         long = json['coord']['lon']
         lat = json['coord']['lat']
-        with st.container():
-            showTemperatureUI(city, temperature, temp_feels, wind, humidity)
 
-        result = [temperature, temp_feels, humidity, city, long, lat]
+        result = [temperature, temp_feels, humidity, city, long, lat, wind]
 
         return result, json
 
@@ -141,12 +139,13 @@ elif add_selectbox == "Compare Cities Weather":
     for x in options:
         columns.append(x)
         res, json = storeData(x)
+        showTemperatureUI(res[3], res[0], res[1], res[5], res[2])
         temp_array.append(res[0])
 
 
     data = pd.DataFrame({
         'index': columns,
-        'sports_teams': temp_array,
+        'Temperature in Fahrenheit': temp_array,
     }).set_index('index')
 
     st.bar_chart(data)
@@ -188,7 +187,7 @@ else:
 
             if cityname:
                 res, json = storeData(cityname)
-
+                showTemperatureUI(res[3], res[0], res[1], res[5], res[2])
                 df = pd.DataFrame(
                     {
                         "lat": [res[5]],
