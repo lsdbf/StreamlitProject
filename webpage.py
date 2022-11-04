@@ -69,7 +69,9 @@ def getFiveDayForecast(zipcode, option):
             label: array_to_pass,
         }).set_index('index')
 
+        st.info('This information is from OpenWeatherMap.org', icon="ℹ️")
         st.line_chart(data)
+
 
 
 # text input requirement --ethan
@@ -153,9 +155,13 @@ else:
         st.title("The Weather Canaliser 😎")
         ##image title
         image = Image.open('title.png')
+        if st.button('Click Here To Learn About the App'):
+            st.write('This Weather App allows you to check the weather!')
+        else:
+            st.write('HELLLLLLOOOOOO')
 
     with col2:
-        st.write("want to change the picture of the title?")
+        st.write("Want to change the picture of the title?")
         pictures = st.radio("Choose one of the following",
                             ('default', 'birb', 'dawg', 'reeeee'))
 
@@ -174,6 +180,23 @@ else:
     audio_file = open('media/CosmicDance.mp3', 'rb')
     audio_bytes = audio_file.read()
     st.audio(audio_bytes, format='audio/ogg')
+
+    weather = st.select_slider(
+        'Select your favorite type of weather',
+        options=['sunny', 'overcast', 'rainy', 'thunder', 'snow'])
+
+    icon = ' '
+    if weather == 'sunny':
+        icon = '☀️'
+    elif weather == 'overcast':
+        icon = '🌥'
+    elif weather == 'rainy':
+        icon = '🌧'
+    elif weather == 'thunder':
+        icon = '🌩'
+    elif weather == 'snow':
+        icon = '🌨'
+    st.title(icon)
 
     col1, col2 = st.columns(2)
 
