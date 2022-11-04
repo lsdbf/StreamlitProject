@@ -69,7 +69,9 @@ def getFiveDayForecast(zipcode, option):
             label: array_to_pass,
         }).set_index('index')
 
+        st.info('This information is from OpenWeatherMap.org', icon="ℹ️")
         st.line_chart(data)
+
 
 
 # text input requirement --ethan
