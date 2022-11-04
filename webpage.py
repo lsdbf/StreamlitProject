@@ -155,9 +155,13 @@ else:
         st.title("The Weather Canaliser 😎")
         ##image title
         image = Image.open('title.png')
+        if st.button('Click Here To Learn About the App'):
+            st.write('This Weather App allows you to check the weather!')
+        else:
+            st.write('HELLLLLLOOOOOO')
 
     with col2:
-        st.write("want to change the picture of the title?")
+        st.write("Want to change the picture of the title?")
         pictures = st.radio("Choose one of the following",
                             ('default', 'birb', 'dawg', 'reeeee'))
 
