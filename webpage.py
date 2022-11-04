@@ -2,12 +2,31 @@ from fileinput import close
 from re import S
 
 import dateutil.utils
+import time
 import streamlit as st
 import numpy as np
 import pandas as pd
 import requests
 import json
 from PIL import Image
+
+
+#removing the streamlit hamburger menu --mariela
+st.markdown(""" <style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style> """, unsafe_allow_html=True)
+
+#removing padding from app --mariela
+padding = 0
+st.markdown(f""" <style>
+    .reportview-container .main .block-container{{
+        padding-top: {padding}rem;
+        padding-right: {padding}rem;
+        padding-left: {padding}rem;
+        padding-bottom: {padding}rem;
+    }} </style> """, unsafe_allow_html=True)
+
 
 # Added UI widget function to show weather. Can delete just an idea - Chris
 def showTemperatureUI(name, temperature, temp_feels, wind, humidty):
@@ -23,6 +42,10 @@ def showTemperatureUI(name, temperature, temp_feels, wind, humidty):
 # API call that gets 5 day forecast and creates chart
 def getFiveDayForecast(zipcode, option):
     if (zipcode):
+        #added spinner - Mariela
+        with st.spinner('Wait for it...'):
+            time.sleep(5)
+            st.success('Done!')
         api_key = "cd101785cf9a9ea832093a5827bdc77c"
         url = "https://api.openweathermap.org/data/2.5/forecast?zip=" + zipcode + ",us&appid=" + api_key + "&units=imperial"
         header = {'content-type': 'application/json',
@@ -131,6 +154,8 @@ if add_selectbox == "5-Day Forecast":
         icon = '🌩'
     elif weather == 'snow':
         icon = '🌨'
+        #added celebratory snowfall when page loads - fit for weather app theme/ -Mariela
+        st.snow()
     st.title(icon)
 
     with st.container():
@@ -202,11 +227,18 @@ else:
     with st.container():
         try:
             st.title("Enter Your City")
-            cityname = st.text_input("city")
+            cityname = st.text_input("City")
 
             if cityname:
+                #added progress bar before weather displayed after city input - Mariela
+                my_bar = st.progress(0)
+                for percent_complete in range(100):
+                    time.sleep(0.1)
+                    my_bar.progress(percent_complete + 1)
                 res, json = storeData(cityname)
                 showTemperatureUI(res[3], res[0], res[1], res[5], res[2])
+                #added info label - Mariela
+                st.info('This information is from OpenWeatherMap.org', icon="ℹ️")
                 df = pd.DataFrame(
                     {
                         "lat": [res[5]],
@@ -214,8 +246,11 @@ else:
                     },
                     columns=["lat", "lon"]
                 )
-                st.map(df)
-                st.success("Map successfully displayed")
+                #adding spinner before pd.dataframe - Mariela
+                with st.spinner('Wait for it...'):
+                    time.sleep(5)
+                    st.map(df)
+                    st.success("Done! Map successfully displayed")
                 values = pd.DataFrame(
                     {
                         "temp": [res[0]],
