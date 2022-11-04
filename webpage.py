@@ -181,6 +181,23 @@ else:
     audio_bytes = audio_file.read()
     st.audio(audio_bytes, format='audio/ogg')
 
+    weather = st.select_slider(
+        'Select your favorite type of weather',
+        options=['sunny', 'overcast', 'rainy', 'thunder', 'snow'])
+
+    icon = ' '
+    if weather == 'sunny':
+        icon = '☀️'
+    elif weather == 'overcast':
+        icon = '🌥'
+    elif weather == 'rainy':
+        icon = '🌧'
+    elif weather == 'thunder':
+        icon = '🌩'
+    elif weather == 'snow':
+        icon = '🌨'
+    st.title(icon)
+
     col1, col2 = st.columns(2)
 
     with st.container():
