@@ -7,7 +7,6 @@ import numpy as np
 import pandas as pd
 import requests
 import json
-import altair as alt
 from PIL import Image
 
 # Added UI widget function to show weather. Can delete just an idea - Chris
@@ -117,6 +116,23 @@ add_selectbox = st.sidebar.selectbox(
 
 # Line graph to show weather for 5 day period - Chris
 if add_selectbox == "5-Day Forecast":
+    weather = st.select_slider(
+        'Select your favorite type of weather',
+        options=['sunny', 'overcast', 'rainy', 'thunder', 'snow'])
+
+    icon = ' '
+    if weather == 'sunny':
+        icon = '☀️'
+    elif weather == 'overcast':
+        icon = '🌥'
+    elif weather == 'rainy':
+        icon = '🌧'
+    elif weather == 'thunder':
+        icon = '🌩'
+    elif weather == 'snow':
+        icon = '🌨'
+    st.title(icon)
+
     with st.container():
         st.write("Pick your city to check the weather for the next 5 days.")
         zip = st.text_input("Zip Code")
@@ -180,23 +196,6 @@ else:
     audio_file = open('media/CosmicDance.mp3', 'rb')
     audio_bytes = audio_file.read()
     st.audio(audio_bytes, format='audio/ogg')
-
-    weather = st.select_slider(
-        'Select your favorite type of weather',
-        options=['sunny', 'overcast', 'rainy', 'thunder', 'snow'])
-
-    icon = ' '
-    if weather == 'sunny':
-        icon = '☀️'
-    elif weather == 'overcast':
-        icon = '🌥'
-    elif weather == 'rainy':
-        icon = '🌧'
-    elif weather == 'thunder':
-        icon = '🌩'
-    elif weather == 'snow':
-        icon = '🌨'
-    st.title(icon)
 
     col1, col2 = st.columns(2)
 
