@@ -1,3 +1,8 @@
+#Project By Mariela Torres Zuniga
+#           Christopher Fonseca
+#           Ethan Mendoza
+
+
 from fileinput import close
 from re import S
 
