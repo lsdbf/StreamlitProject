@@ -44,7 +44,7 @@ def getFiveDayForecast(zipcode, option):
     if (zipcode):
         #added spinner - Mariela
         with st.spinner('Wait for it...'):
-            time.sleep(5)
+            time.sleep(2)
             st.success('Done!')
         api_key = "cd101785cf9a9ea832093a5827bdc77c"
         url = "https://api.openweathermap.org/data/2.5/forecast?zip=" + zipcode + ",us&appid=" + api_key + "&units=imperial"
@@ -233,7 +233,7 @@ else:
                 #added progress bar before weather displayed after city input - Mariela
                 my_bar = st.progress(0)
                 for percent_complete in range(100):
-                    time.sleep(0.1)
+                    time.sleep(0.0001)
                     my_bar.progress(percent_complete + 1)
                 res, json = storeData(cityname)
                 showTemperatureUI(res[3], res[0], res[1], res[5], res[2])
@@ -248,7 +248,7 @@ else:
                 )
                 #adding spinner before pd.dataframe - Mariela
                 with st.spinner('Wait for it...'):
-                    time.sleep(5)
+                    time.sleep(2)
                     st.map(df)
                     st.success("Done! Map successfully displayed")
                 values = pd.DataFrame(
